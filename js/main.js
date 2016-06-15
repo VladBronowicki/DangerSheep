@@ -10,15 +10,18 @@ var mainCanvas = document.querySelector( '#maincanvas' );
 var canvasContext = mainCanvas.getContext('2d');
 var timer;
 
-
-
 var animationFrame;
 var paused = true;
+var gs
 
+$.getScript("js/GameSprite.js", function( jd ){
+	gs = new GameSprite(150,150,45,45);
+	gs.setSprite("images/sheepHelmet.png");
+});
 
 window.onload = function(){
 	
-	window.addEventListener( 'keydown', listenForEsc );
+	document.addEventListener( 'keydown', game_KeyActionLogic );
 	document.addEventListener( 'click' , game_MouseActionLogic );
 	
 }
@@ -29,35 +32,14 @@ function game_MouseActionLogic( ev ){
 }
 
 function startTimer( interval ){
-	timer = window.setInterval(draw, interval);
+	timer = window.setInterval( draw, interval );
 }
 	
 function stopTimer(){
 	window.clearInterval(timer);
 }
 
-function testObject(){
-		this.posx = 50;
-		this.posy = 50;
-		this.velx = 0.5;
-		this.vely = 1.5;
-		this.render = function(){
-			canvasContext.fillStyle = "red";
-			canvasContext.fillRect(this.posx, this.posy, 15,15);
-		}
-		this.update = function(){
-			this.posx += this.velx;
-			this.posy += this.vely;
-			if(this.posy > maincanvas.height -15 || this.posy < 0){
-				this.vely *= -1;
-			}
-			if(this.posx > maincanvas.width -15 || this.posx < 0){
-				this.velx *= -1;
-			}
-		}
-}
-
-function listenForEsc( ev ) {
+function game_KeyActionLogic( ev ) {
 	//console.log(ev.keyCode);
 	switch(ev.keyCode){
 	case 80://p
@@ -77,11 +59,8 @@ function listenForEsc( ev ) {
 
 /*Main*/
 
-//gs = new GameSprite();
-tobj = new testObject();
-
 function draw(){
 	canvasContext.clearRect(0 ,0 , mainCanvas.width, maincanvas.height);
-	tobj.render();
-	tobj.update();
+	gs.render();
+	gs.update();
 }
